@@ -25,12 +25,3 @@ This module can be used independently or as a dependency for higher-level file m
 - **Remote directory management:** Delete, clear, or manage folders on remote systems without needing manual access.
 - **File system maintenance:** Use **WinDirOps** to ensure file system cleanliness and order during regular system maintenance tasks.
 
-## Make it yours
-
----
-Generated with Plaster and the SampleModule template
-
-
-This is a sample Readme
-
-## Make it yours
