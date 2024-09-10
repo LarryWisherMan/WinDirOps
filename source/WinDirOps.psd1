@@ -74,7 +74,12 @@ This module can be used independently or as a dependency for higher-level file m
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules      = @('WisherTools.Helpers')
+    RequiredModules      = @(
+        @{
+            ModuleName    = 'WisherTools.Helpers'
+            ModuleVersion = '0.2.0'
+        }
+    )
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
