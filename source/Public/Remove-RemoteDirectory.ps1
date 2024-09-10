@@ -34,38 +34,37 @@ function Remove-RemoteDirectory
         [string]$ComputerName
     )
 
-
     # Check if the remote computer is online
     if (-not (Test-ComputerPing -ComputerName $ComputerName))
     {
-        # Return FolderDeletionResult indicating the computer is offline
-        return [FolderDeletionResult]::new(
-            $Directory,
-            $false,
-            "The remote computer '$ComputerName' is offline or unreachable.",
-            $ComputerName
-        )
+        $deletionInfo = @{
+            Directory       = $Directory
+            DeletionSuccess = $false
+            DeletionMessage = "The remote computer '$ComputerName' is offline or unreachable."
+            ComputerName    = $ComputerName
+        }
+        return New-FolderDeletionResult @deletionInfo
     }
 
-
-    # Get the full script block for Clear-DirectoryContents function
+    # Get the script blocks for Clear-DirectoryContents and Invoke-MirRoboCopy functions
     $clearDirectoryFunction = Get-FunctionScriptBlock -FunctionName 'Clear-DirectoryContents'
-    $IvokeMirRoboCopyFunction = Get-FunctionScriptBlock -FunctionName 'Invoke-MirRoboCopy'
+    $invokeMirRoboCopyFunction = Get-FunctionScriptBlock -FunctionName 'Invoke-MirRoboCopy'
 
-    if (-not $clearDirectoryFunction -or -not $IvokeMirRoboCopyFunction)
+    if (-not $clearDirectoryFunction -or -not $invokeMirRoboCopyFunction)
     {
-        Write-Error "Unable to retrieve Clear-DirectoryContents function."
+        Write-Error "Unable to retrieve required functions."
         return
     }
 
     $scriptBlock = {
-        param ($remoteDirectory, $clearFunction, $RoboCopyFunction)
+        param ($remoteDirectory, $clearFunction, $roboCopyFunction)
 
-        # Define the function from the passed string
-        Invoke-Expression $clearFunction, $RoboCopyFunction
+        # Define the functions from the passed strings
+        Invoke-Expression $clearFunction
+        Invoke-Expression $roboCopyFunction
 
         # Call the Clear-DirectoryContents function
-        if (Clear-DirectoryContents -Directory $remoteDirectory -confirm:$false)
+        if (Clear-DirectoryContents -Directory $remoteDirectory -Confirm:$false)
         {
             return @{
                 Directory    = $remoteDirectory
@@ -89,25 +88,26 @@ function Remove-RemoteDirectory
     {
         if ($PSCmdlet.ShouldProcess("$ComputerName`: $Directory", "Delete remote directory"))
         {
-            # Execute the script block on the remote machine, passing the function string and directory
+            # Execute the script block on the remote machine
             $rawResult = Invoke-Command -ComputerName $ComputerName -ScriptBlock $scriptBlock -ArgumentList $Directory, $clearDirectoryFunction, $invokeMirRoboCopyFunction
 
-            # Construct the FolderDeletionResult object locally
-            return [FolderDeletionResult]::new(
-                $rawResult.Directory,
-                $rawResult.Success,
-                $rawResult.Message,
-                $rawResult.ComputerName
-            )
+            $deletionInfo = @{
+                Directory       = $rawResult.Directory
+                DeletionSuccess = $rawResult.Success
+                DeletionMessage = $rawResult.Message
+                ComputerName    = $rawResult.ComputerName
+            }
+            return New-FolderDeletionResult @deletionInfo
         }
     }
     catch
     {
-        return [FolderDeletionResult]::new(
-            $Directory,
-            $false,
-            "Error occurred while deleting remote directory '$Directory'. $_",
-            $ComputerName
-        )
+        $deletionInfo = @{
+            Directory       = $Directory
+            DeletionSuccess = $false
+            DeletionMessage = "Error occurred while deleting remote directory '$Directory'. $_"
+            ComputerName    = $ComputerName
+        }
+        return New-FolderDeletionResult @deletionInfo
     }
 }

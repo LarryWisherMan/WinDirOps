@@ -31,33 +31,33 @@ function Remove-LocalDirectory
     {
         if ($PSCmdlet.ShouldProcess($Directory, "Delete local directory"))
         {
+            $deletionInfo = @{
+                Directory    = $Directory
+                ComputerName = $env:COMPUTERNAME
+            }
+
             if (Clear-DirectoryContents -Directory $Directory -Confirm:$false)
             {
-                return [FolderDeletionResult]::new(
-                    $Directory,
-                    $true,
-                    "Successfully deleted local directory '$Directory'.",
-                    $env:COMPUTERNAME
-                )
+                $deletionInfo.DeletionSuccess = $true
+                $deletionInfo.DeletionMessage = "Successfully deleted local directory '$Directory'."
             }
             else
             {
-                return [FolderDeletionResult]::new(
-                    $Directory,
-                    $false,
-                    "Failed to delete local directory '$Directory'.",
-                    $env:COMPUTERNAME
-                )
+                $deletionInfo.DeletionSuccess = $false
+                $deletionInfo.DeletionMessage = "Failed to delete local directory '$Directory'."
             }
+
+            return New-FolderDeletionResult @deletionInfo
         }
     }
     catch
     {
-        return [FolderDeletionResult]::new(
-            $Directory,
-            $false,
-            "Error occurred while deleting local directory '$Directory'. $_",
-            $env:COMPUTERNAME
-        )
+        $deletionInfo = @{
+            Directory       = $Directory
+            DeletionSuccess = $false
+            DeletionMessage = "Error occurred while deleting local directory '$Directory'. $_"
+            ComputerName    = $env:COMPUTERNAME
+        }
+        return New-FolderDeletionResult @deletionInfo
     }
 }
