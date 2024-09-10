@@ -42,10 +42,23 @@ function Invoke-MirRoboCopy
 
     try
     {
+
+        # Validate that the source directory exists
+        if (-not (Test-Path -Path $SourceDirectory -PathType Container))
+        {
+            throw "Source directory '$SourceDirectory' does not exist."
+        }
+
+        # Validate that the target directory exists
+        if (-not (Test-Path -Path $TargetDirectory -PathType Container))
+        {
+            throw "Target directory '$TargetDirectory' does not exist."
+        }
+
         if ($PSCmdlet.ShouldProcess($TargetDirectory, "Mirror directory from '$SourceDirectory'"))
         {
             # Use robocopy to mirror the source directory to the target directory
-            $result = robocopy $SourceDirectory $TargetDirectory /mir
+            $result = Invoke-RoboCopyCommand -SourceDirectory $SourceDirectory -TargetDirectory $TargetDirectory  -AdditionalParams '/mir'
 
             # Check robocopy result
             if ($result -ge 8)
