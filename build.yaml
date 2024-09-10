@@ -97,7 +97,7 @@ Pester:
   # - tests/Integration
   ExcludeTag:
     - Wrapper
-    - helpQuality
+    #- helpQuality
     - FunctionalQuality
     - TestQuality
   Tag:

@@ -18,7 +18,6 @@
     This function works only on local directories. For remote directories, use `Remove-RemoteDirectory`.
 #>
 
-
 function Remove-LocalDirectory
 {
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
