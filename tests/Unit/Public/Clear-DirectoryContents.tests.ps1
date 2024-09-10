@@ -109,7 +109,7 @@ Describe 'Clear-DirectoryContents' -Tag 'Public' {
             Mock -CommandName Invoke-MirRoboCopy -MockWith { throw "Exception in RoboCopy" }
 
             # Act
-            { Clear-DirectoryContents -Directory $testDirectory -Confirm:$false } | Should -Not -Throw
+            { Clear-DirectoryContents -Directory $testDirectory -Confirm:$false -ErrorAction Continue } | Should -Not -Throw
 
         }
 
@@ -121,7 +121,7 @@ Describe 'Clear-DirectoryContents' -Tag 'Public' {
             Mock -CommandName Invoke-MirRoboCopy -MockWith { throw "Exception in RoboCopy" }
 
             # Act
-            $result = Clear-DirectoryContents -Directory $testDirectory -Confirm:$false
+            $result = Clear-DirectoryContents -Directory $testDirectory -Confirm:$false -ErrorAction Continue
 
             # Assert
             $result | Should -Be $false
