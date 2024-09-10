@@ -19,9 +19,10 @@
     This function is for clearing the contents of a directory while preserving the directory itself.
     To delete both the directory and its contents, use `Clear-Directory` or `Remove-DirectoryByType`.
 #>
-
 function Clear-DirectoryContents
 {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "")]
+    [OutputType([System.Boolean])]
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param (
         [Parameter(Mandatory = $true)]

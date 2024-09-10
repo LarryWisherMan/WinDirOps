@@ -31,6 +31,7 @@
 #>
 function Invoke-MirRoboCopy
 {
+    [OutputType([System.Boolean])]
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param (
         [Parameter(Mandatory = $true)]

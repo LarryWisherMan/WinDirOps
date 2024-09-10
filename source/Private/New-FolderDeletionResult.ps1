@@ -40,6 +40,7 @@
 
 function New-FolderDeletionResult
 {
+    [Diagnostics.CodeAnalysis.SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
     param (
         [Parameter(Mandatory = $true)]
         [string]$Directory,

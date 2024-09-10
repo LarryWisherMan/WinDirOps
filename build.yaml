@@ -98,8 +98,8 @@ Pester:
   ExcludeTag:
     - Wrapper
     #- helpQuality
-    - FunctionalQuality
-    - TestQuality
+    #- FunctionalQuality
+    #- TestQuality
   Tag:
   CodeCoverageThreshold: 70 # Set to 0 to bypass
   #CodeCoverageOutputFile: JaCoCo_$OsShortName.xml

@@ -60,8 +60,8 @@ function Remove-RemoteDirectory
         param ($remoteDirectory, $clearFunction, $roboCopyFunction)
 
         # Define the functions from the passed strings
-        Invoke-Expression $clearFunction
-        Invoke-Expression $roboCopyFunction
+        & $clearFunction
+        & $roboCopyFunction
 
         # Call the Clear-DirectoryContents function
         if (Clear-DirectoryContents -Directory $remoteDirectory -Confirm:$false)
