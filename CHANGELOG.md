@@ -35,6 +35,7 @@ indicating if the computer is offline and abort the operation if it is unreachab
 when a remote computer is offline or the deletion operation fails.
 
 - Created `Invoke-RobocopyCommand` as a private wrapper for robocopy
+- Created `New-FolderDeletionResult` for `FolderDeletionResult` object creation
 
 ### Changed
 
@@ -47,3 +48,6 @@ requests during execution.
 - Improved comment-based help for all functions to clearly explain local vs.
 remote operations, the role of `ShouldProcess`, and how the
 remote computer checks are handled.
+
+- updated `Remove-LocalDirectory` and `Remove-RemoteDirectory` to use new wrapper
+function `New-FolderDeletionResult` for `FolderDeletionResult` object creation
